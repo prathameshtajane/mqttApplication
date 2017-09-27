@@ -4,8 +4,8 @@ import paho.mqtt.client as mqtt
 import time
 import logging
 
-#broker_address="192.168.0.47";
-broker_address="146.115.80.244";
+broker_address="192.168.0.47";
+#broker_address="146.115.80.244";
 broker_port="1883";
 publish_return=();
 logging.basicConfig(level=logging.ERROR)
@@ -54,10 +54,10 @@ def on_message(client,userdata,message):
 def data_generator(mqtt_client):
     counter=0
     while counter != 1000:
-        # publish_return=mqtt_client.publish("tajane",counter,0,True)
-        # systemParams=subprocess.check_output([sys.executable, "getGPUTemp.py"])
-        # systemParam=systemParams.split("=")[1].split("'")[0]
-        systemParam=counter;
+        #publish_return=mqtt_client.publish("tajane",counter,0,True)
+        systemParams=subprocess.check_output([sys.executable, "getGPUTemp.py"])
+        systemParam=systemParams.split("=")[1].split("'")[0]
+        # systemParam=counter;
         (result, mid) = mqtt_client.publish("tajanep", systemParam, 0, True)
         if (result == 0):
             logging.error("Packet published succesfully !")
