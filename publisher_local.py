@@ -61,7 +61,7 @@ def data_generator(mqtt_client):
         sendObj.append(counter)
         sendObj.append(systemParam)
         # systemParam=counter;
-        (result, mid) = mqtt_client.publish("tajanep", sendObj, 0, True)
+        (result, mid) = mqtt_client.publish("tajanep", str(sendObj), 0, True)
         if (result == 0):
             logging.error("Packet published succesfully !")
             logging.error("counter : "+str(counter))
