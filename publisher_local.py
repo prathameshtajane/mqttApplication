@@ -58,8 +58,8 @@ def data_generator(mqtt_client):
         systemParams=subprocess.check_output([sys.executable, "getGPUTemp.py"])
         systemParam=systemParams.split("=")[1].split("'")[0]
         sendObj=[];
-        sendObj[0]=counter
-        sendObj[1]=systemParam
+        sendObj.append(counter)
+        sendObj.append(systemParam)
         # systemParam=counter;
         (result, mid) = mqtt_client.publish("tajanep", sendObj, 0, True)
         if (result == 0):
