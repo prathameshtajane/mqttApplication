@@ -62,6 +62,7 @@ def data_generator(mqtt_client):
         if (result == 0):
             logging.error("Packet published succesfully !")
             logging.error("counter : "+str(counter))
+            logging.error("data : " + str(systemParam))
             logging.info("mid : " + str(mid))
             logging.info("Received publish status " + str(result))
         else:
