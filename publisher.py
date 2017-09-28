@@ -4,8 +4,8 @@ import paho.mqtt.client as mqtt
 import time
 import logging
 
-#broker_address="192.168.0.47";
-broker_address="146.115.80.244";
+broker_address="192.168.0.47";
+#broker_address="146.115.80.244";
 broker_port="1883";
 publish_return=();
 logging.basicConfig(level=logging.ERROR)

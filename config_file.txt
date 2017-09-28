@@ -1,0 +1,5 @@
+subscriber_topic:tajanep
+publisher_topic:someTopic
+sensor_client_id:sensor_pub_sub_1
+mqtt_broker_ip_address:192.168.0.47
+mqtt_broker_port:1883

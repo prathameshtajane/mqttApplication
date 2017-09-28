@@ -3,29 +3,38 @@ import subprocess
 import paho.mqtt.client as mqtt
 import time
 import logging
+from readConfigFile import configs
 
-#broker_address="192.168.0.47"
-broker_address="146.115.80.244";
-broker_port="1883";
+# broker_address="192.168.0.47"
+# #broker_address="146.115.80.244";
+# broker_port="1883";
+# sub_topic="tajanep";
+# pub_topic="hub1";
+# pub_msg="Sender Message !"
+
+broker_address=configs['mqtt_broker_ip_address']
+broker_port=configs['mqtt_broker_port']
+sub_topic=configs['subscriber_topic']
+pub_topic=configs['publisher_topic']
+pub_msg="Sender Message !"
+
 publish_return=();
 logging.basicConfig(level=logging.ERROR)
 #level : logging.INFO or logging.DEBUG or logging.WARNING
 
 mqtt.Client.connected_flag = False;
-mqtt_sensor_client = mqtt.Client(client_id="sensor_pub_sub_1", clean_session=False, userdata=None)
+mqtt_sensor_client = mqtt.Client(clean_session=True, userdata=None)
 
 
 def on_connect(mqtt_client, userdata, flags, rc):
     if rc==0:
         mqtt_client.connected_flag=True
-        print("Connection sucess !")
-        logging.info ("Client connected to Broker")
+        logging.info("Sensor connected to broker.")
         try:
-            logging.error("start eith subscription ")
-            mqtt_sensor_client.subscribe("tajanep");
-            # logging.ERROR("Connection successful !");
+            logging.info("Initiating subscription process.")
+            mqtt_sensor_client.subscribe(sub_topic);
         except Exception as e:
-            logging.error("Error during subscription ")
+            logging.error("Subscription process failed.topic :"+sub_topic)
             logging.error(e);
             mqtt_sensor_client.loop_stop();
             sys.exit(1);
@@ -37,10 +46,8 @@ def on_disconnect(client,userdata,rc):
     logging.info("Client Disconnected");
     logging.error("Client Reconnection initiated");
     mqtt_sensor_client.connect(broker_address, broker_port, 60)
-    #mqtt_sensor_client.loop_start()
     mqtt_sensor_client.loop_forever();
-    # data_generator(mqtt_client)
-    # initiate_client_broker_connection();
+
 
 def on_log(client,userdat,level,buffer):
     logging.info("on_log callback")
@@ -51,8 +58,9 @@ def on_publish(mqtt_client,useradata,received_mid):
     logging.info("mid: " + str(received_mid))
 
 def on_subscribe(client,userdata,mid,granted_qos):
-    print("subscription success !")
-    #logging.INFO("subscribed")
+    logging.info("Subscription succesful")
+    logging.info("Subscription topic :" + sub_topic)
+    logging.info("Subscription granted QoS :" + str(granted_qos))
 
 def on_unsubscribe(client,userdata,mid,granted_qos):
     logging.info("unsubscribed")
@@ -83,30 +91,11 @@ except:
     sys.exit(1)
 
 mqtt_sensor_client.loop_forever();
-#mqtt_sensor_client.loop_start();
 
-# while not mqtt_sensor_client.connected_flag:
-#     logging.info("Client-Broker connection in progress")
-#     time.sleep(1)
-#
-# print("start with subscribe")
-# (result, mid) = mqtt_sensor_client.subscribe("tajanep",1)
-
-# if (result == 0):
-#     logging.info("Client subscription succesfully !")
-#     logging.info("mid : " + str(mid))
-#     logging.info("Received subscription status " + str(result))
-# else:
-#     logging.ERROR("Packet subscription failed !")
-
-systemParam="Sender Message !"
-
-(result, mid) = mqtt_sensor_client.publish("someTopic", systemParam, 0, True)
+(result, mid) = mqtt_sensor_client.publish(pub_topic, pub_msg, 0, True)
 if (result == 0):
     logging.info("Packet published succesfully !")
     logging.info("mid : " + str(mid))
     logging.info("Received publish status " + str(result))
 else:
     logging.error("Packet publish failed !")
-
-#mqtt_sensor_client.loop_forever()
